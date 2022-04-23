@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "435542013579",
+    "project_id": "strangers-master",
+    "storage_bucket": "strangers-master.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:435542013579:android:0840694168ca2c2c80468e",
+        "android_client_info": {
+          "package_name": "com.appsians.strangers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "435542013579-bf6jhk6bjrnk4nuf221vb41g55oqabmk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.appsians.strangers",
+            "certificate_hash": "3406bcc0014cd68b40a472c88a07f31a0d86b302"
+          }
+        },
+        {
+          "client_id": "435542013579-oe0gq89hto4pc13bglbnkfhkueu02a59.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1Sl0IT3iZKz1DGCRJREO85AdFq0h7-tw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "435542013579-oe0gq89hto4pc13bglbnkfhkueu02a59.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
