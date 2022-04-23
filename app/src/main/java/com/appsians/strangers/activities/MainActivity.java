@@ -1,18 +1,17 @@
 package com.appsians.strangers.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.appsians.strangers.R;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import com.appsians.strangers.FakeActivity;
 import com.appsians.strangers.databinding.ActivityMainBinding;
 import com.appsians.strangers.models.User;
 import com.bumptech.glide.Glide;
@@ -86,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         binding.findButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if(isPermissionsGranted()) {
                     if (coins > 5) {
                         coins = coins - 5;
@@ -93,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
                                 .child(currentUser.getUid())
                                 .child("coins")
                                 .setValue(coins);
-                        Intent intent = new Intent(MainActivity.this, ConnectingActivity.class);
+                    //    Intent intent = new Intent(MainActivity.this, ConnectingActivity.class);
+                        Intent intent = new Intent(MainActivity.this, FakeActivity.class);
                         intent.putExtra("profile", user.getProfile());
                         startActivity(intent);
                         //startActivity(new Intent(MainActivity.this, ConnectingActivity.class));
