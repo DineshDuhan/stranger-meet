@@ -1,8 +1,5 @@
 package com.appsians.strangers.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +9,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.appsians.strangers.R;
 import com.appsians.strangers.databinding.ActivityCallBinding;
