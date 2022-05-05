@@ -18,7 +18,10 @@ function init(userId) {
     peer.on('open', () => {
         Android.onPeerConnected()
     })
-
+   peer.on('disconnected', () => {
+        peer.destroy();
+        Android.endCallForced()
+    })
     listen()
 }
 
@@ -65,6 +68,9 @@ function startCall(otherUserId) {
         })
 
     })
+}
+function endCall(){
+ peer.destroy();
 }
 
 function toggleVideo(b) {

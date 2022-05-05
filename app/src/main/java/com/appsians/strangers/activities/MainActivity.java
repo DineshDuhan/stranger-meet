@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.appsians.strangers.FakeActivity;
 import com.appsians.strangers.databinding.ActivityMainBinding;
 import com.appsians.strangers.models.User;
 import com.bumptech.glide.Glide;
@@ -93,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
                                 .child(currentUser.getUid())
                                 .child("coins")
                                 .setValue(coins);
-                    //    Intent intent = new Intent(MainActivity.this, ConnectingActivity.class);
-                        Intent intent = new Intent(MainActivity.this, FakeActivity.class);
+                          Intent intent = new Intent(MainActivity.this, ConnectingActivity.class);
+                      //  Intent intent = new Intent(MainActivity.this, FakeActivity.class);
                         intent.putExtra("profile", user.getProfile());
                         startActivity(intent);
                         //startActivity(new Intent(MainActivity.this, ConnectingActivity.class));

@@ -99,6 +99,7 @@ public class CallActivity extends AppCompatActivity {
         binding.endCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                callJavaScriptFunction("javascript:endCall()");
                 finish();
             }
         });
@@ -223,7 +224,9 @@ public class CallActivity extends AppCompatActivity {
     public void onPeerConnected(){
         isPeerConnected = true;
     }
-
+public void endCallForced(){
+        finish();
+}
     void sendCallRequest(){
         if(!isPeerConnected) {
             Toast.makeText(this, "You are not connected. Please check your internet.", Toast.LENGTH_SHORT).show();

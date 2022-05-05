@@ -16,5 +16,9 @@ public class InterfaceJava {
     public void onPeerConnected(){
         callActivity.onPeerConnected();
     }
+    @JavascriptInterface
+    public  void endCallForced(){
+        callActivity.endCallForced();
+    }
 
 }

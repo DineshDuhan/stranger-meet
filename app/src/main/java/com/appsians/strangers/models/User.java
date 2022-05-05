@@ -2,7 +2,7 @@ package com.appsians.strangers.models;
 
 public class User {
     private String uId, name, profile, city;
-    private long coins;
+    private long coins,fakeCount;
 
     public User() {
 

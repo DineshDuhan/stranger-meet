@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".activities.CallActivity">
 
+
     <VideoView
         android:id="@+id/videoview"
         android:layout_width="match_parent"
@@ -13,6 +14,16 @@
         />
 
 
+    <androidx.camera.view.PreviewView
+        android:id="@+id/camera"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintHeight_percent="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.35" />
 
     <ImageView
         android:id="@+id/endCallfake"
