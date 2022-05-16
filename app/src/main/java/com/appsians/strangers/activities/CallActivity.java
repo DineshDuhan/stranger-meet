@@ -56,7 +56,17 @@ public class CallActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         firebaseRef = FirebaseDatabase.getInstance().getReference().child("users");
-
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("users").child(createdBy);
+                Toast.makeText(CallActivity.this, ""+dr.toString(), Toast.LENGTH_SHORT).show();
+                if(dr == null){
+                    finish();
+                }
+            }
+        },1500);
         username = getIntent().getStringExtra("username");
         String incoming = getIntent().getStringExtra("incoming");
         createdBy = getIntent().getStringExtra("createdBy");
@@ -100,7 +110,7 @@ public class CallActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 callJavaScriptFunction("javascript:endCall()");
-                finish();
+                onDestroy();
             }
         });
 
@@ -225,7 +235,9 @@ public class CallActivity extends AppCompatActivity {
         isPeerConnected = true;
     }
 public void endCallForced(){
-        finish();
+    pageExit = true;
+    firebaseRef.child(createdBy).setValue(null);
+    finish();
 }
     void sendCallRequest(){
         if(!isPeerConnected) {
@@ -267,6 +279,22 @@ public void endCallForced(){
 
     String getUniqueId(){
         return UUID.randomUUID().toString();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+       Handler handler = new Handler();
+       handler.postDelayed(new Runnable() {
+           @Override
+           public void run() {
+               DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("users").child(createdBy);
+               Toast.makeText(CallActivity.this, ""+dr.toString(), Toast.LENGTH_SHORT).show();
+               if(dr == null){
+                   finish();
+               }
+           }
+       },1500);
     }
 
     @Override

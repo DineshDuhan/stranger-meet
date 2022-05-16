@@ -64,6 +64,7 @@ public class FakeActivity extends AppCompatActivity {
     String fakeUserName,fakeVideoName;
     Random ran;
     VideoView videoView;
+    File rootPath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +104,8 @@ public class FakeActivity extends AppCompatActivity {
                         }
                         fakeUserSize = fakeUserList.size();
                         ran = new Random();
-                        randomVal = ran.nextInt(Math.abs(fakeUserSize));
+                        randomVal = ran.nextInt(Math.abs(fakeUserSize-1));
+                       // Toast.makeText(FakeActivity.this, "random"+randomVal, Toast.LENGTH_LONG).show();
                         randomVideoIndex = randomVal;
                         fakeUserName = fakeUserList.get(randomVideoIndex).toString();
                         fakeVideoName = fakeUserName + ".mp4";
@@ -124,7 +126,7 @@ public class FakeActivity extends AppCompatActivity {
         StorageReference videoRef = storageRef.child("videos/"+fakeVideoName);
         //  StorageReference  islandRef = storageRef.child("file.txt");
 
-        File rootPath = new File(Environment.getExternalStorageDirectory(), "videos");
+         rootPath = new File(Environment.getExternalStorageDirectory(), "videos");
         if(!rootPath.exists()) {
             rootPath.mkdirs();
         }
@@ -159,6 +161,7 @@ public class FakeActivity extends AppCompatActivity {
                 videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mediaPlayer) {
+                        localFile.delete();
                         finish();
                     }
                 });
@@ -174,6 +177,14 @@ public class FakeActivity extends AppCompatActivity {
     }
 
     public void endCall(View v) {
+        if(rootPath.isDirectory()){
+            File[] files = rootPath.listFiles();
+            if (files!=null){
+                for(File f : files){
+                    f.delete();
+                }
+            }
+        }
         finish();
     }
     public void micBtnClick(View v) {

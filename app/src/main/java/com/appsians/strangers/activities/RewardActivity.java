@@ -1,13 +1,12 @@
 package com.appsians.strangers.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.appsians.strangers.R;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.appsians.strangers.databinding.ActivityRewardBinding;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.LoadAdError;
@@ -66,12 +65,12 @@ public class RewardActivity extends AppCompatActivity {
                         @Override
                         public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                             loadAd();
-                            coins = coins + 200;
+                            coins = coins + 20;
                             database.getReference().child("profiles")
                                     .child(currentUid)
                                     .child("coins")
                                     .setValue(coins);
-                            binding.video1Icon.setImageResource(R.drawable.check);
+                          //  binding.video1Icon.setImageResource(R.drawable.check);
                         }
                     });
                 } else {
@@ -87,12 +86,12 @@ public class RewardActivity extends AppCompatActivity {
     void loadAd() {
         AdRequest adRequest = new AdRequest.Builder().build();
 
-        RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917",
+        RewardedAd.load(this, "ca-app-pub-9597591041971183/7222734888",
                 adRequest, new RewardedAdLoadCallback() {
                     @Override
                     public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                         // Handle the error.
-
+                       // Toast.makeText(RewardActivity.this, "Failed"+loadAdError.toString(), Toast.LENGTH_SHORT).show();
                         mRewardedAd = null;
                     }
 

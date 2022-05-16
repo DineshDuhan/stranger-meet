@@ -1,14 +1,14 @@
 package com.appsians.strangers.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.appsians.strangers.R;
 import com.appsians.strangers.models.User;
@@ -18,7 +18,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -91,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             FirebaseUser user = mAuth.getCurrentUser();
-                            User firebaseUser = new User(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), "Unknown", 500);
+                            User firebaseUser = new User(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), "Unknown", 50);
                             database.getReference()
                                     .child("profiles")
                                     .child(user.getUid())
@@ -99,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull @NotNull Task<Void> task) {
                                     if(task.isSuccessful()){
+                                        database.getReference().child("user_turn_count").child(user.getUid()).child("turn_count").setValue(1);
                                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                         finishAffinity();
                                     } else {

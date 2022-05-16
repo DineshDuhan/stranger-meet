@@ -1,18 +1,16 @@
 package com.appsians.strangers.activities;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-
-import com.appsians.strangers.R;
 import com.appsians.strangers.databinding.ActivityConnectingBinding;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,7 +26,7 @@ public class ConnectingActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseDatabase database;
     boolean isOkay = false;
-
+    String username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +41,7 @@ public class ConnectingActivity extends AppCompatActivity {
                 .load(profile)
                 .into(binding.profile);
 
-        String username = auth.getUid();
+         username = auth.getUid();
 
         database.getReference().child("users")
                 .orderByChild("status")
@@ -68,13 +66,17 @@ public class ConnectingActivity extends AppCompatActivity {
                                 Intent intent = new Intent(ConnectingActivity.this, CallActivity.class);
                                 String incoming = childSnap.child("incoming").getValue(String.class);
                                 String createdBy = childSnap.child("createdBy").getValue(String.class);
-                                boolean isAvailable = childSnap.child("isAvailable").getValue(Boolean.class);
-                                intent.putExtra("username", username);
-                                intent.putExtra("incoming", incoming);
-                                intent.putExtra("createdBy", createdBy);
-                                intent.putExtra("isAvailable", isAvailable);
-                                startActivity(intent);
-                                finish();
+                                if(incoming.equals(createdBy)){
+                                    finish();
+                                }
+                                    boolean isAvailable = childSnap.child("isAvailable").getValue(Boolean.class);
+                                    intent.putExtra("username", username);
+                                    intent.putExtra("incoming", incoming);
+                                    intent.putExtra("createdBy", createdBy);
+                                    intent.putExtra("isAvailable", isAvailable);
+                                    startActivity(intent);
+                                    finish();
+
                             }
                         } else {
                             // Not Available
@@ -106,6 +108,11 @@ public class ConnectingActivity extends AppCompatActivity {
                                                     Intent intent = new Intent(ConnectingActivity.this, CallActivity.class);
                                                     String incoming = snapshot.child("incoming").getValue(String.class);
                                                     String createdBy = snapshot.child("createdBy").getValue(String.class);
+                                                    boolean b = incoming.equals(createdBy);
+                                                    Toast.makeText(ConnectingActivity.this, "equal or not" + b, Toast.LENGTH_SHORT).show();
+                                                    if(incoming.equals(createdBy)){
+                                                        finish();
+                                                    }
                                                     boolean isAvailable = snapshot.child("isAvailable").getValue(Boolean.class);
                                                     intent.putExtra("username", username);
                                                     intent.putExtra("incoming", incoming);
@@ -137,5 +144,14 @@ public class ConnectingActivity extends AppCompatActivity {
 
 
 
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        database.getReference()
+                .child("users")
+                .child(username)
+                .setValue(null);
+        this.finish();
     }
 }

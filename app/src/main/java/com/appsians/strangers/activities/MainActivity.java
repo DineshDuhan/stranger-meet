@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.appsians.strangers.FakeActivity;
 import com.appsians.strangers.databinding.ActivityMainBinding;
 import com.appsians.strangers.models.User;
 import com.bumptech.glide.Glide;
@@ -33,11 +34,12 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseDatabase database;
     long coins = 0;
-    String[] permissions = new String[] {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
+    String[] permissions = new String[] {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     private int requestCode = 1;
     User user;
     KProgressHUD progress;
-
+    long user_turn_count = 1;
+    long frequency=3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,25 +82,62 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+        // get the frequency of video redirect
+        database.getReference().child("frequency").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                frequency = snapshot.getValue(Integer.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+// getting the count of turn user finding the match.
+
 
         binding.findButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 if(isPermissionsGranted()) {
-                    if (coins > 5) {
-                        coins = coins - 5;
+                    if (coins >= 10) {
+                        database.getReference().child("user_turn_count").child(currentUser.getUid()).child("turn_count").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                user_turn_count = snapshot.getValue(Integer.class);
+                                Toast.makeText(MainActivity.this, ""+ user_turn_count, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                        coins = coins - 10;
                         database.getReference().child("profiles")
                                 .child(currentUser.getUid())
                                 .child("coins")
                                 .setValue(coins);
-                          Intent intent = new Intent(MainActivity.this, ConnectingActivity.class);
-                      //  Intent intent = new Intent(MainActivity.this, FakeActivity.class);
+                        Intent intent;
+                        // user_turn_count%frequency==0
+                        if(user_turn_count%100==0){
+
+                            intent = new Intent(MainActivity.this, FakeActivity.class);
+                        }
+                        else {
+                            intent = new Intent(MainActivity.this, ConnectingActivity.class);
+                        }
+                        user_turn_count +=1;
+                        Toast.makeText(MainActivity.this, "turn"+user_turn_count, Toast.LENGTH_SHORT).show();
+                        database.getReference().child("user_turn_count").child(currentUser.getUid()).child("turn_count").setValue(user_turn_count);
                         intent.putExtra("profile", user.getProfile());
                         startActivity(intent);
-                        //startActivity(new Intent(MainActivity.this, ConnectingActivity.class));
                     } else {
                         Toast.makeText(MainActivity.this, "Insufficient Coins", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, RewardActivity.class);
+                        startActivity(intent);
                     }
                 } else {
                     askPermissions();
