@@ -42,7 +42,36 @@ public class ConnectingActivity extends AppCompatActivity {
                 .into(binding.profile);
 
          username = auth.getUid();
+         initialize();
 
+         init1();
+
+    }
+    public void init1(){
+        database.getReference().child("users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int flag =0;
+                if(!snapshot.hasChild(username)){
+                    flag =1;
+                    Toast.makeText(ConnectingActivity.this, "child not found"+ snapshot, Toast.LENGTH_LONG).show();
+                    if(flag ==1) {
+                        finish();
+                    }
+                }
+                else {
+                    Toast.makeText(ConnectingActivity.this, "child found"+ snapshot, Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public void initialize(){
         database.getReference().child("users")
                 .orderByChild("status")
                 .equalTo(0).limitToFirst(1)
@@ -69,13 +98,13 @@ public class ConnectingActivity extends AppCompatActivity {
                                 if(incoming.equals(createdBy)){
                                     finish();
                                 }
-                                    boolean isAvailable = childSnap.child("isAvailable").getValue(Boolean.class);
-                                    intent.putExtra("username", username);
-                                    intent.putExtra("incoming", incoming);
-                                    intent.putExtra("createdBy", createdBy);
-                                    intent.putExtra("isAvailable", isAvailable);
-                                    startActivity(intent);
-                                    finish();
+                                boolean isAvailable = childSnap.child("isAvailable").getValue(Boolean.class);
+                                intent.putExtra("username", username);
+                                intent.putExtra("incoming", incoming);
+                                intent.putExtra("createdBy", createdBy);
+                                intent.putExtra("isAvailable", isAvailable);
+                                startActivity(intent);
+                                finish();
 
                             }
                         } else {
@@ -143,15 +172,22 @@ public class ConnectingActivity extends AppCompatActivity {
 
 
 
-
     }
+
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
         database.getReference()
                 .child("users")
                 .child(username)
-                .setValue(null);
-        this.finish();
+                .setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                   // finish();
+            }
+        });
+
     }
 }
