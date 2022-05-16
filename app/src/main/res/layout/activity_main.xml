@@ -126,7 +126,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/roboto_light"
         android:gravity="center"
-        android:text="Persons are looking for reandom people, click find and talk with them."
+        android:text="People are looking for partners, click find and talk with them."
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/lottieAnimationView"
         app:layout_constraintStart_toStartOf="@+id/lottieAnimationView"
