@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     KProgressHUD progress;
     long user_turn_count = 1;
     long frequency=3;
+    FirebaseUser currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
 
-        FirebaseUser currentUser = auth.getCurrentUser();
+         currentUser = auth.getCurrentUser();
 
         database.getReference().child("profiles")
                 .child(currentUser.getUid())
@@ -103,18 +104,8 @@ public class MainActivity extends AppCompatActivity {
 
                 if(isPermissionsGranted()) {
                     if (coins >= 10) {
-                        database.getReference().child("user_turn_count").child(currentUser.getUid()).child("turn_count").addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                user_turn_count = snapshot.getValue(Integer.class);
-                                Toast.makeText(MainActivity.this, ""+ user_turn_count, Toast.LENGTH_SHORT).show();
-                            }
+                        getUserCount();
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
                         coins = coins - 10;
                         database.getReference().child("profiles")
                                 .child(currentUser.getUid())
@@ -122,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                                 .setValue(coins);
                         Intent intent;
                         // user_turn_count%frequency==0
-                        if(user_turn_count%100==0){
+                        if(user_turn_count%frequency==0){
 
                             intent = new Intent(MainActivity.this, FakeActivity.class);
                         }
@@ -156,7 +147,20 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    public void getUserCount(){
+        database.getReference().child("user_turn_count").child(currentUser.getUid()).child("turn_count").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                user_turn_count = snapshot.getValue(Integer.class);
+                Toast.makeText(MainActivity.this, ""+ user_turn_count, Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     void askPermissions(){
         ActivityCompat.requestPermissions(this, permissions, requestCode);
     }

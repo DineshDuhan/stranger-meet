@@ -104,7 +104,7 @@ public class FakeActivity extends AppCompatActivity {
                         }
                         fakeUserSize = fakeUserList.size();
                         ran = new Random();
-                        randomVal = ran.nextInt(Math.abs(fakeUserSize-1));
+                        randomVal = ran.nextInt(Math.abs(fakeUserSize));
                        // Toast.makeText(FakeActivity.this, "random"+randomVal, Toast.LENGTH_LONG).show();
                         randomVideoIndex = randomVal;
                         fakeUserName = fakeUserList.get(randomVideoIndex).toString();

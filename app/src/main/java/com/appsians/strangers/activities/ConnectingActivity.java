@@ -27,6 +27,7 @@ public class ConnectingActivity extends AppCompatActivity {
     FirebaseDatabase database;
     boolean isOkay = false;
     String username;
+    int flag=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,26 +45,27 @@ public class ConnectingActivity extends AppCompatActivity {
          username = auth.getUid();
          initialize();
 
-         init1();
+
 
     }
     public void init1(){
-        database.getReference().child("users").addValueEventListener(new ValueEventListener() {
+
+
+        database.getReference().child("users").child(username).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int flag =0;
-                if(!snapshot.hasChild(username)){
-                    flag =1;
-                    Toast.makeText(ConnectingActivity.this, "child not found"+ snapshot, Toast.LENGTH_LONG).show();
-                    if(flag ==1) {
-                        finish();
-                    }
+                //Toast.makeText(ConnectingActivity.this, ""+username, Toast.LENGTH_SHORT).show();
+                boolean b = snapshot.exists();
+                Toast.makeText(ConnectingActivity.this, ""+b, Toast.LENGTH_SHORT).show();
+                if(b){
+                   flag =1;
+                   // Toast.makeText(ConnectingActivity.this, "" + flag+ " = flag "+"child found"+ snapshot, Toast.LENGTH_LONG).show();
                 }
-                else {
-                    Toast.makeText(ConnectingActivity.this, "child found"+ snapshot, Toast.LENGTH_LONG).show();
+                if(b == false) {
+                   // Toast.makeText(ConnectingActivity.this, "" + b, Toast.LENGTH_SHORT).show();
+                    finish();
                 }
-
-            }
+                }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -122,6 +124,7 @@ public class ConnectingActivity extends AppCompatActivity {
                                     .setValue(room).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
+                                  // init1();
                                     database.getReference()
                                             .child("users")
                                             .child(username).addValueEventListener(new ValueEventListener() {
@@ -138,7 +141,7 @@ public class ConnectingActivity extends AppCompatActivity {
                                                     String incoming = snapshot.child("incoming").getValue(String.class);
                                                     String createdBy = snapshot.child("createdBy").getValue(String.class);
                                                     boolean b = incoming.equals(createdBy);
-                                                    Toast.makeText(ConnectingActivity.this, "equal or not" + b, Toast.LENGTH_SHORT).show();
+                                                   // Toast.makeText(ConnectingActivity.this, "equal or not" + b, Toast.LENGTH_SHORT).show();
                                                     if(incoming.equals(createdBy)){
                                                         finish();
                                                     }
@@ -173,6 +176,7 @@ public class ConnectingActivity extends AppCompatActivity {
 
 
     }
+
 
 
     @Override

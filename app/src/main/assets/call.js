@@ -17,12 +17,44 @@ function init(userId) {
 
     peer.on('open', () => {
         Android.onPeerConnected()
+
     })
-peer.on('close', () => {
-            //console.log("yes im here")
-            Android.endCallForced()
-        })
+    peer.on('connection', conn => {
+
+
+        // peerjs bug prevents this from firing: https://github.com/peers/peerjs/issues/636
+//        call.on('close', () => {
+//            console.log("call close event");
+//            handlePeerDisconnect();
+//        });
+        // this one works
+        conn.on('close', () => {
+            console.log("conn close event");
+            handlePeerDisconnect();
+        });
+    });
+//peer.on('close', () => {
+//    peer.destroy();
+//            //console.log("yes im here")
+//            Android.endCallForced()
+//        })
     listen()
+}
+
+function handlePeerDisconnect() {
+  // manually close the peer connections
+  for (let conns in peer.connections) {
+    peer.connections[conns].forEach((conn, index, array) => {
+      console.log(`closing ${conn.connectionId} peerConnection (${index + 1}/${array.length})`, conn.peerConnection);
+      conn.peerConnection.close();
+
+      // close it using peerjs methods
+      if (conn.close)
+        conn.close();
+
+
+    });
+  }
 }
 
 let localStream
@@ -48,10 +80,7 @@ function listen() {
         })
         
     })
-     peer.on('close', () => {
 
-            Android.endCallForced()
-        })
 }
 
 function startCall(otherUserId) {
@@ -71,14 +100,17 @@ function startCall(otherUserId) {
             localVideo.className = "secondary-video"
         })
 
+
     })
-    peer.on('close', () => {
-                peer.destroy();
-                Android.endCallForced()
-            })
+
+}
+function endCallOtherUser(){
+ handlePeerDisconnect()
+ peer.destroy()
 }
 function endCall(){
- peer.close();
+handlePeerDisconnect()
+ peer.destroy()
 }
 
 function toggleVideo(b) {

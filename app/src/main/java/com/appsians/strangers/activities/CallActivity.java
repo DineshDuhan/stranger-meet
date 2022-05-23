@@ -38,7 +38,7 @@ public class CallActivity extends AppCompatActivity {
     String friendsUsername = "";
 
     boolean isPeerConnected = false;
-
+    FirebaseDatabase database;
     DatabaseReference firebaseRef;
 
     boolean isAudio = true;
@@ -56,6 +56,7 @@ public class CallActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         firebaseRef = FirebaseDatabase.getInstance().getReference().child("users");
+        database = FirebaseDatabase.getInstance();
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -70,6 +71,7 @@ public class CallActivity extends AppCompatActivity {
         username = getIntent().getStringExtra("username");
         String incoming = getIntent().getStringExtra("incoming");
         createdBy = getIntent().getStringExtra("createdBy");
+
 
 //        friendsUsername = "";
 //
@@ -110,7 +112,13 @@ public class CallActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 callJavaScriptFunction("javascript:endCall()");
-                onDestroy();
+                pageExit = true;
+                firebaseRef.child(createdBy).setValue(null);
+                binding.webView.clearCache(true);
+                binding.webView.destroy();
+                finish();
+                //onDestroy();
+                // cutCall();
             }
         });
 
@@ -229,6 +237,34 @@ public class CallActivity extends AppCompatActivity {
             }, 3000);
         }
 
+        database.getReference().child("users").child(createdBy).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //Toast.makeText(ConnectingActivity.this, ""+username, Toast.LENGTH_SHORT).show();
+                boolean b = snapshot.exists();
+                // Toast.makeText(ConnectingActivity.this, ""+b, Toast.LENGTH_SHORT).show();
+                if(b){
+
+                    // Toast.makeText(ConnectingActivity.this, "" + flag+ " = flag "+"child found"+ snapshot, Toast.LENGTH_LONG).show();
+                   // Toast.makeText(CallActivity.this, "found", Toast.LENGTH_SHORT).show();
+                }
+                if(b == false) {
+                   // Toast.makeText(CallActivity.this, "exit call", Toast.LENGTH_SHORT).show();
+                    callJavaScriptFunction("javascript:endCallOtherUser()");
+                    pageExit = true;
+                    firebaseRef.child(createdBy).setValue(null);
+                    binding.webView.clearCache(true);
+                    binding.webView.destroy();
+                    finish();
+                    //cutCall();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     public void onPeerConnected(){
@@ -237,7 +273,10 @@ public class CallActivity extends AppCompatActivity {
 public void endCallForced(){
     pageExit = true;
     firebaseRef.child(createdBy).setValue(null);
+    binding.webView.clearCache(true);
+    binding.webView.destroy();
     finish();
+    //cutCall();
 }
     void sendCallRequest(){
         if(!isPeerConnected) {
@@ -291,10 +330,19 @@ public void endCallForced(){
                DatabaseReference dr = FirebaseDatabase.getInstance().getReference().child("users").child(createdBy);
                Toast.makeText(CallActivity.this, ""+dr.toString(), Toast.LENGTH_SHORT).show();
                if(dr == null){
+                   binding.webView.clearCache(true);
+                   binding.webView.destroy();
                    finish();
                }
            }
        },1500);
+    }
+
+    public void cutCall(){
+       // pageExit = true;
+       // firebaseRef.child(createdBy).setValue(null);
+       // finish();
+        onDestroy();
     }
 
     @Override
@@ -302,6 +350,12 @@ public void endCallForced(){
         super.onDestroy();
         pageExit = true;
         firebaseRef.child(createdBy).setValue(null);
-        finish();
+
+        //finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

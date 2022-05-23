@@ -4,9 +4,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/give_love"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/give_love"
         android:supportsRtl="true"
         android:theme="@style/Theme.Strangers"
         android:usesCleartextTraffic="true">
@@ -14,8 +14,10 @@
             android:name=".FakeActivity"
             android:exported="false" />
         <activity android:name=".activities.RewardActivity" />
-        <activity android:name=".activities.CallActivity" />
-        <activity android:name=".activities.ConnectingActivity" />
+        <activity android:name=".activities.CallActivity"
+            android:noHistory="true"/>
+        <activity android:name=".activities.ConnectingActivity"
+            android:noHistory="true"/>
         <activity android:name=".activities.LoginActivity" />
         <activity
             android:name=".activities.WelcomeActivity"
