@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:fontFamily="@font/roboto_light"
+        android:fontFamily="@font/roboto_bold"
         android:gravity="center"
         android:text="Talk with Random people \n from all around the globe. \n Make new friends and have fun!"
         android:textColor="@color/white"
